@@ -45,17 +45,11 @@ namespace PROG301_Week7.ViewModels
 
         public Airport airport;
 
-        private List<AerialVehicle> vehicles { get { return airport.Vehicles; } 
-            set { 
-                airport.Vehicles = value;
-                RaisePropertyChangedEvent("Vehicles");
-            } }
-
-        public ObservableCollection<AerialVehicle> Vehicles { get { return IEnumToObsCol(vehicles); } 
+        public ObservableCollection<AerialVehicle> Vehicles { get { return IEnumToObsCol(airport.Vehicles); } 
             set 
             { 
-                vehicles = ObsColToList(value); 
-                RaisePropertyChangedEvent(); 
+                airport.Vehicles = ObsColToList(value);
+                RaisePropertyChangedEvent("Vehicles"); 
             }}
         public int MaxVehicles { get { return airport.MaxVehicles; } set { airport.MaxVehicles = value; RaisePropertyChangedEvent(); } }
         public string AirportCode { get { return airport.AirportCode; } set { airport.AirportCode = value; RaisePropertyChangedEvent(); } }
@@ -63,7 +57,7 @@ namespace PROG301_Week7.ViewModels
 
         public void LoadVehicles(List<AerialVehicle> _vehicles)
         {
-            vehicles = _vehicles;
+            Vehicles = IEnumToObsCol(_vehicles);
         }
 
 
@@ -76,7 +70,7 @@ namespace PROG301_Week7.ViewModels
 
             int value = Convert.ToInt16(input);
 
-            AerialVehicle index = vehicles[value];
+            AerialVehicle index = Vehicles[value];
 
             departures.Add(index);
 
@@ -90,14 +84,14 @@ namespace PROG301_Week7.ViewModels
         {
             ObservableCollection<AerialVehicle> departures = (ObservableCollection<AerialVehicle>)parameter;
 
-            foreach ( var av in vehicles )
+            foreach ( var av in Vehicles )
             {
                 departures.Add(av);
             }
 
             airport.AllTakeOff();
 
-            RaisePropertyChangedEvent("vehicles");
+            RaisePropertyChangedEvent("Vehicles");
         }
 
         private void SingleLand(object parameter)
@@ -111,7 +105,7 @@ namespace PROG301_Week7.ViewModels
 
             AerialVehicle index = arrivials[value];
 
-            if (vehicles.Count + 1 > MaxVehicles)
+            if (Vehicles.Count + 1 > MaxVehicles)
             {
                 return;
             }

@@ -49,14 +49,10 @@ namespace PROG301_Week7.Views
                     (
                         "AF8B95",
                         10,
-                        new List<AerialVehicle>()
+                        new List<AerialVehicle> { new Airplane(), new Airplane(), new Airplane() }
                     )
                 );
 
-            ap_vm.LoadVehicles
-                (
-                new List<AerialVehicle> { new Airplane(), new Airplane(), new Airplane() }
-                );
 
             UpdateDataContext();
         }
