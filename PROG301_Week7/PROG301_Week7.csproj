@@ -8,11 +8,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <None Remove="Serialized\test1.txt" />
+    <None Remove="Serialized\test2.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Serialized\" />
+    <Content Include="Serialized\test1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Serialized\test2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 </Project>

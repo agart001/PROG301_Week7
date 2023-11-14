@@ -24,10 +24,5 @@ namespace PROG301_Week7
         {
             InitializeComponent();
         }
-
-        private void AirportUserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

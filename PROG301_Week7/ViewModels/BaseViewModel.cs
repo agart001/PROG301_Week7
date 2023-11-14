@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PROG301_Week7.ViewModels
 {
-    public class BaseViewModel
+    public class BaseViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

@@ -9,6 +9,7 @@
             <local:ParamConverter x:Key="ParamConverter"/>
             <local:FileExtensionConverter x:Key="FExtConverter"/>
             <local:FileNameConverter x:Key="FNameConverter"/>
+            <local:FileReadConverter x:Key="FReadConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
