@@ -1,5 +1,8 @@
 ﻿
+using PROG301_Week7.Interfaces;
 using PROG301_Week7.Models;
+using PROG301_Week7.Models.Serializable;
+using PROG301_Week7.ViewModels.Serializable;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,9 +34,9 @@ namespace PROG301_Week7.ViewModels
         private bool CanMultiLand(object parameter) => true;
 
 
-        public AirportViewModel(Airport ap)
+        public AirportViewModel(IAirport iap)
         {
-            airport = ap;
+            airport = (Airport)iap;
 
             SingleTakeOffCommand = new BasicCommand(SingleTakeOff, CanSingleTakeOff);
             MultiTakeOffCommand = new BasicCommand(MultiTakeOff, CanMultiTakeOff);

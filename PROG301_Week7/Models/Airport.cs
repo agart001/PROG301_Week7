@@ -1,16 +1,19 @@
-﻿using System;
+﻿using PROG301_Week7.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace PROG301_Week7.Models
 {
-    public class Airport
+    public class Airport : IAirport
     {
         //private vars
         protected List<AerialVehicle> vehicles;
         protected int maxvehicles;
         protected string airportcode;
+
+        protected Guid ID;
 
 
         //public vars
@@ -22,8 +25,15 @@ namespace PROG301_Week7.Models
 
         //events
 
+        public Airport()
+        {
+            ID = Guid.NewGuid();
+        }
+
         public Airport(string Code) : this(Code, defaultMaxVehicles)
         {
+            ID = Guid.NewGuid();
+            
             //Default to 5 vehicles   
             AirportCode = Code;
             MaxVehicles = defaultMaxVehicles;
@@ -33,6 +43,8 @@ namespace PROG301_Week7.Models
 
         public Airport(string Code, int Max)
         {
+            ID = Guid.NewGuid();
+
             AirportCode = Code;
             MaxVehicles = Max;
 
@@ -41,6 +53,8 @@ namespace PROG301_Week7.Models
 
         public Airport(string Code, int Max, List<AerialVehicle> vehicles)
         {
+            ID = Guid.NewGuid();  
+
             AirportCode = Code;
             MaxVehicles = Max;
 
@@ -111,6 +125,10 @@ namespace PROG301_Week7.Models
 
             return stringLand;
         }
+
+        public override int GetHashCode() => this.ID.GetHashCode();
+
+        public string GetFileName() => $"{AirportCode}_{ID}";
 
     }
 }

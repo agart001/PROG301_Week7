@@ -7,6 +7,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <local:ParamConverter x:Key="ParamConverter"/>
+            <local:FileExtensionConverter x:Key="FExtConverter"/>
+            <local:FileNameConverter x:Key="FNameConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

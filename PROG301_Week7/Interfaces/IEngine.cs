@@ -6,7 +6,7 @@ namespace PROG301_Week7.Interfaces
     public interface IEngine
     {
 
-        Engine Engine { get; set;}
+        Engine? Engine { get; set;}
 
         void StartEngine();
         void StopEngine();

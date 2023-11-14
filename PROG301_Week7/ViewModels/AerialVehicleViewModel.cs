@@ -18,7 +18,15 @@ namespace PROG301_Week7.ViewModels
 
         public AerialVehicle aerialvehicle;
 
-        public Engine Engine { get { return aerialvehicle.Engine; } set { aerialvehicle.Engine = value; } }
+        public Engine Engine 
+        { 
+            get 
+            { 
+                if(aerialvehicle.Engine == null) { throw new Exception("Null Engine"); }
+                return aerialvehicle.Engine; 
+            } 
+            set { aerialvehicle.Engine = value; } 
+        }
         public bool IsFlying { get { return aerialvehicle.IsFlying; } set { aerialvehicle.IsFlying = value; } }
         public int MaxAltitude { get { return aerialvehicle.MaxAltitude; } set { aerialvehicle.MaxAltitude = value; } }
         public int CurrentAltitude { get { return aerialvehicle.CurrentAltitude; } set { aerialvehicle.CurrentAltitude = value; } }

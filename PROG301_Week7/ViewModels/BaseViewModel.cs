@@ -10,11 +10,11 @@ namespace PROG301_Week7.ViewModels
 {
     public class BaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         // Create the OnPropertyChanged method to raise the event
         // The calling member's name will be used as the parameter.
-        protected void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected void RaisePropertyChangedEvent([CallerMemberName] string? name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }

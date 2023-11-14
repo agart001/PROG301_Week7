@@ -9,15 +9,18 @@ namespace PROG301_Week7.Models
     public abstract class AerialVehicle : IFlyable, IEngine
     {
         // Private backing fields
-        private Engine engine;
+        private Engine? engine;
         private bool isFlying;
         private int maxAltitude;
         private int currentAltitude;
         private int defaultAltitudeChange;
-        private string typeString;
+        private string typeString = string.Empty;
+
+        //protected 
+        protected Guid ID;
 
         // Public properties with getters and setters using the backing fields
-        public Engine Engine { get => engine; set => engine = value; }
+        public Engine? Engine { get => engine; set => engine = value; }
         public bool IsFlying { get => isFlying; set => isFlying = value; }
         public int MaxAltitude { get => maxAltitude; set => maxAltitude = value; }
         public int CurrentAltitude { get => currentAltitude; set => currentAltitude = value; }
@@ -28,6 +31,7 @@ namespace PROG301_Week7.Models
 
         public AerialVehicle()
         {
+            this.ID = Guid.NewGuid();
             this.Engine = new Engine();
             DefaultAltitudeChange = 1000;
             TypeString = this.GetType().Name;
@@ -35,11 +39,13 @@ namespace PROG301_Week7.Models
 
         public virtual void StartEngine()
         {
+            if(Engine == null) { throw new Exception("Null Engine"); }
             Engine.Start();
         }
 
         public virtual void StopEngine()
         {
+            if (Engine == null) { throw new Exception("Null Engine"); }
             Engine.Stop();
         }
 
@@ -84,10 +90,12 @@ namespace PROG301_Week7.Models
             }
         }
 
-        public event Action<string> TakeOffEvent;
+        public event Action<string>? TakeOffEvent;
 
         public virtual string TakeOff()
         {
+            if (Engine == null) { throw new Exception("Null Engine"); }
+            if (TakeOffEvent == null) { throw new Exception("Null TakeOffEvent"); }
             if (Engine.IsStarted)
             {
                 IsFlying = true;
@@ -112,6 +120,7 @@ namespace PROG301_Week7.Models
         /// <returns></returns>
         public string getEngineStartedString()
         {
+            if (Engine == null) { throw new Exception("Null Engine"); }
             return this.Engine.About();
         }
 
@@ -121,5 +130,9 @@ namespace PROG301_Week7.Models
                 this.ToString(), this.MaxAltitude.ToString(), this.CurrentAltitude, this.getEngineStartedString());
             return about;
         }
+
+        public override int GetHashCode() => this.ID.GetHashCode();
+
+        public string GetFileName() => $"{TypeString}_{ID}";
     }
 }
