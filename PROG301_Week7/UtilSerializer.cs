@@ -48,7 +48,13 @@ namespace PROG301_Week7
             string cur = Directory.GetCurrentDirectory();
             string file = $"{filename}.{extension}";
             string path = Path.Combine(cur, dir, file);
-            File.WriteAllText(path, contents);
+            using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
+                    sw.Write(contents);
+                }
+            }
         }
 
         public static SerializedFile GetFile(string dir, string filename, string extension) 

@@ -31,6 +31,13 @@ namespace PROG301_Week7.Views
     /// </summary>
     public partial class SerializableAirportUserControl : UserControl, INotifyPropertyChanged
     {
+        /*
+         * Text="{
+                        Binding ElementName=UC_SAirports, 
+                        Path=SelectedFile, 
+                        Converter={StaticResource FReadConverter},
+                        UpdateSourceTrigger=PropertyChanged}"
+         */
         public string[] SerializedFiles { get; set; }
 
         private string selfi = "";
@@ -46,6 +53,8 @@ namespace PROG301_Week7.Views
                 RaisePropertyChangedEvent("SelectedFile");
             }
         }
+
+        public bool SelectedFileLocked = false;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -87,8 +96,36 @@ namespace PROG301_Week7.Views
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ListView lv = sender as ListView ?? throw new ArgumentNullException(nameof(sender));
-            SelectedFile = lv.SelectedItem as string ?? throw new ArgumentNullException(nameof(lv));
+            if(SelectedFileLocked == false)
+            {
+                ListView lv = sender as ListView ?? throw new ArgumentNullException(nameof(sender));
+                SelectedFile = lv.SelectedItem as string ?? throw new ArgumentNullException(nameof(lv));
+                tb_SerializedFile.Text = File.ReadAllText(SelectedFile);
+            }
+        }
+
+        private void btn_SaveFile_Click(object sender, RoutedEventArgs e)
+        {
+            string filename = System.IO.Path.GetFileNameWithoutExtension(SelectedFile);
+            
+            string extension = System.IO.Path.GetExtension(SelectedFile).Substring(1);
+            UtilSerializer.SaveFile
+                (
+                    "Serialized",
+                    filename,
+                    extension,
+                    tb_SerializedFile.Text
+                );
+        }
+
+        private void btn_LockFile_Click(object sender, RoutedEventArgs e)
+        {
+            if(SelectedFileLocked == false)
+            { 
+                SelectedFileLocked = true;
+            }
+            else
+            { SelectedFileLocked = false; }
         }
     }
 }
