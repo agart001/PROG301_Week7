@@ -1,4 +1,5 @@
 ﻿using PROG301_Week7.Interfaces;
+using PROG301_Week7.Models.Serializable;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,25 +7,8 @@ using System.Text;
 
 namespace PROG301_Week7.Models
 {
-    public class Airport : IAirport
+    public class Airport : SerializableAirport
     {
-        //private vars
-        protected List<AerialVehicle> vehicles;
-        protected int maxvehicles;
-        protected string airportcode;
-
-        protected Guid ID;
-
-
-        //public vars
-        public List<AerialVehicle> Vehicles { get { return vehicles; } set { vehicles = value; } }
-        public int MaxVehicles { get { return maxvehicles; } set { maxvehicles = value; } }
-        public string AirportCode { get { return airportcode; } set { airportcode = value; } }
-
-        private static int defaultMaxVehicles = 5;
-
-        //events
-
         public Airport()
         {
             ID = Guid.NewGuid();

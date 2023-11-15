@@ -31,13 +31,13 @@ namespace PROG301_Week7.Views
     /// </summary>
     public partial class SerializableAirportUserControl : UserControl, INotifyPropertyChanged
     {
-        /*
-         * Text="{
-                        Binding ElementName=UC_SAirports, 
-                        Path=SelectedFile, 
-                        Converter={StaticResource FReadConverter},
-                        UpdateSourceTrigger=PropertyChanged}"
-         */
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void RaisePropertyChangedEvent([CallerMemberName] string? name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
         public string[] SerializedFiles { get; set; }
 
         private string selfi = "";
@@ -56,14 +56,31 @@ namespace PROG301_Week7.Views
 
         public bool SelectedFileLocked = false;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public ObservableCollection<SerializableAirportViewModel> Airports {  get; set; }
 
-        protected void RaisePropertyChangedEvent([CallerMemberName] string? name = null)
+        private SerializableAirportViewModel selectedSAPVM;
+        public SerializableAirportViewModel SelectedSAPVM
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            get { return selectedSAPVM; }
+            set
+            {
+                selectedSAPVM = value;
+                RaisePropertyChangedEvent("SelectedSAPVM");
+            }
         }
 
-        public ObservableCollection<SerializableAirportViewModel> Airports {  get; set; }
+        private SerializableAirport selectedsapvm_ap;
+        public SerializableAirport SelectedSAPVM_AP
+        {
+            get { return selectedsapvm_ap; }
+            set
+            {
+                selectedsapvm_ap = value;
+                RaisePropertyChangedEvent("SelectedSAPVM_AP");
+            }
+        }
+
+        public bool SelectedSAPVMLocked = false;
 
         private ObservableCollection<SerializableAirportViewModel> CreateAirports()
         {
@@ -94,7 +111,7 @@ namespace PROG301_Week7.Views
             InitializeComponent();
         }
 
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void lv_SerializedFiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(SelectedFileLocked == false)
             {
@@ -126,6 +143,29 @@ namespace PROG301_Week7.Views
             }
             else
             { SelectedFileLocked = false; }
+        }
+
+        private void lv_SAPVMs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(SelectedSAPVMLocked == false)
+            {
+                ListView lv = sender as ListView 
+                    ?? throw new ArgumentNullException(nameof(sender));
+                SelectedSAPVM = lv.SelectedItem as SerializableAirportViewModel 
+                    ?? throw new ArgumentNullException(nameof(lv));
+                SelectedSAPVM_AP = (SerializableAirport)SelectedSAPVM.airport 
+                    ?? throw new InvalidCastException(nameof(SelectedSAPVM.airport));
+            }
+        }
+
+        private void btn_LockAirport_Click(object sender, RoutedEventArgs e)
+        {
+            if(SelectedSAPVMLocked == false)
+            {
+                SelectedSAPVMLocked = true;
+            }
+            else 
+            { SelectedSAPVMLocked = false; }
         }
     }
 }

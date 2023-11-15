@@ -13,6 +13,8 @@ namespace PROG301_Week7.Interfaces
         public int MaxVehicles { get; set; }
         public string AirportCode { get; set; }
 
-        private static int defaultMaxVehicles = 5;
+        public static int defaultMaxVehicles = 5;
+
+        public Guid ID { get; set; }
     }
 }

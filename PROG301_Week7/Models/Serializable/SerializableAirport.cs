@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PROG301_Week7.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -7,10 +8,23 @@ using System.Threading.Tasks;
 
 namespace PROG301_Week7.Models.Serializable
 {
-    public class SerializableAirport : Airport, ISerializable
+    public class SerializableAirport : IAirport, ISerializable
     {
-        public SerializableAirport() { }
+        //private vars
+        protected List<AerialVehicle> vehicles;
+        protected int maxvehicles;
+        protected string airportcode;
 
+        //public vars
+        public List<AerialVehicle> Vehicles { get { return vehicles; } set { vehicles = value; } }
+        public int MaxVehicles { get { return maxvehicles; } set { maxvehicles = value; } }
+        public string AirportCode { get { return airportcode; } set { airportcode = value; } }
+
+        public Guid ID { get; set; }
+
+        public static int defaultMaxVehicles = 5;
+
+        public SerializableAirport() { }
 
         protected SerializableAirport(SerializationInfo info, StreamingContext context)
         {
@@ -27,6 +41,7 @@ namespace PROG301_Week7.Models.Serializable
             else { ID = tmpid; }
 
         }
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Vehicles", Vehicles);

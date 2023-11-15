@@ -66,7 +66,7 @@ namespace PROG301_Week7.ViewModels.Serializable
 
             SerializableAirport ap = 
                 UtilSerializer.XmlDeserialize<SerializableAirport>
-                (sf.Contents ?? string.Empty);
+                (sf.Contents ?? throw new ArgumentNullException(nameof(sf)));
         }
 
         private void S_JSON(object parameter) 
@@ -99,7 +99,7 @@ namespace PROG301_Week7.ViewModels.Serializable
 
             SerializableAirport ap = 
                 UtilSerializer.JsonDeserialize<SerializableAirport> 
-                (sf.Contents ?? string.Empty);
+                (sf.Contents ?? throw new ArgumentNullException(nameof(sf)));
         }
     }
 }
