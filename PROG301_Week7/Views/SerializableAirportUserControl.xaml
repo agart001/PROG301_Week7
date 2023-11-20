@@ -34,7 +34,7 @@
                 <Border Grid.Row="1" BorderBrush="Black" BorderThickness="5,2.5,2.5,2.5">
                     <ListView 
                         x:Name="lv_SAPVMs"
-                        ItemsSource="{Binding Path=Airports, ElementName=UC_SAirports}"
+                        ItemsSource="{Binding Path=Airports, ElementName=UC_SAirports, UpdateSourceTrigger=PropertyChanged}"
                         SelectionChanged="lv_SAPVMs_SelectionChanged">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -88,7 +88,7 @@
                 <Border Grid.Row="1" BorderBrush="Black" BorderThickness="2.5,2.5,2.5,2.5">
                     <ListView 
                         x:Name="lv_SerializedFiles"
-                        ItemsSource="{Binding Path=SerializedFiles, ElementName=UC_SAirports}" 
+                        ItemsSource="{Binding Path=SerializedFiles, ElementName=UC_SAirports, UpdateSourceTrigger=PropertyChanged}" 
                         SelectionChanged="lv_SerializedFiles_SelectionChanged">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -183,9 +183,22 @@
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0" BorderBrush="Black" BorderThickness="5" Margin="5">
+                                <TextBlock 
+                                    x:Name="tb_SelectedSAPVM"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Text="{Binding Path=AirportCode}"/>
+                            </Border>
+
+                            <Button
                             x:Name="btn_LockAirport"
-                            Grid.Column="0"
+                            Grid.Row="1"
                             Background="DimGray" 
                             BorderBrush="Black" BorderThickness="5"
                             HorizontalContentAlignment="Center" VerticalAlignment="Center"
@@ -193,28 +206,11 @@
                             Content="Lock Aiport"
                             Click="btn_LockAirport_Click"
                             />
+                        </Grid>
 
-                        <Grid Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                            </Grid.RowDefinitions>
-
-                            <Button
-                                x:Name="btn_XMLSerialize"
-                                Grid.Row="0"
-                                Background="DimGray" 
-                                BorderBrush="Black" BorderThickness="5"
-                                HorizontalContentAlignment="Center" VerticalAlignment="Center"
-                                Margin="5"
-                                Content="XML Serialize"
-                                Command="{Binding Path=SerializeXML}"
-                                >
-                            </Button>
-                            
+                        <Grid Grid.Column="1" DataContext="{Binding ElementName=UC_SAirports}">
                             <Button
                                 x:Name="btn_JSONSerialize"
-                                Grid.Row="1"
                                 Background="DimGray" 
                                 BorderBrush="Black" BorderThickness="5"
                                 HorizontalContentAlignment="Center" VerticalAlignment="Center"
@@ -225,12 +221,19 @@
                             </Button>
                         </Grid>
 
-                        <Grid Grid.Column="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
-                            </Grid.RowDefinitions>
+                        <Grid Grid.Column="2" DataContext="{Binding ElementName=UC_SAirports}">
 
+                            <Button
+                                x:Name="btn_JSONDeserialize"
+                                Grid.Row="1"
+                                Background="DimGray" 
+                                BorderBrush="Black" BorderThickness="5"
+                                HorizontalContentAlignment="Center" VerticalAlignment="Center"
+                                Margin="5"
+                                Content="JSON Deserialize"
+                                Command="{Binding Path=DeserializeJSON}"
+                                >
+                            </Button>
                         </Grid>
                     </Grid>
 
@@ -258,14 +261,27 @@
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button
-                            x:Name="btn_LockFile"
-                            Grid.Column="0" 
-                            Background="DimGray" 
-                            BorderBrush="Black" BorderThickness="5"
-                            HorizontalContentAlignment="Center" VerticalAlignment="Center"
-                            Margin="5"
-                            Content="Lock File" Click="btn_LockFile_Click"/>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0" BorderBrush="Black" BorderThickness="5" Margin="5">
+                                <TextBlock 
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Text="{Binding Path=SelectedFile, ElementName=UC_SAirports, Converter={StaticResource FNameConverter}}"/>
+                            </Border>
+
+                            <Button
+                                x:Name="btn_LockFile"
+                                Grid.Row="1"
+                                Background="DimGray" 
+                                BorderBrush="Black" BorderThickness="5"
+                                HorizontalContentAlignment="Center" VerticalAlignment="Center"
+                                Margin="5"
+                                Content="Lock File" Click="btn_LockFile_Click"/>
+                        </Grid>
 
                         <Button 
                             x:Name="btn_SaveFile"

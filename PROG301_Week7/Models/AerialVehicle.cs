@@ -3,32 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PROG301_Week7.Interfaces;
+using PROG301_Week7.Models.Serializable;
 
 namespace PROG301_Week7.Models
 {
-    public abstract class AerialVehicle : IFlyable, IEngine
+    public abstract class AerialVehicle : SerializableAerialVehicle
     {
-        // Private backing fields
-        private Engine? engine;
-        private bool isFlying;
-        private int maxAltitude;
-        private int currentAltitude;
-        private int defaultAltitudeChange;
-        private string typeString = string.Empty;
-
-        //protected 
-        protected Guid ID;
-
-        // Public properties with getters and setters using the backing fields
-        public Engine? Engine { get => engine; set => engine = value; }
-        public bool IsFlying { get => isFlying; set => isFlying = value; }
-        public int MaxAltitude { get => maxAltitude; set => maxAltitude = value; }
-        public int CurrentAltitude { get => currentAltitude; set => currentAltitude = value; }
-        public int DefaultAltitudeChange { get => defaultAltitudeChange; set => defaultAltitudeChange = value; }
-        public string TypeString { get => typeString; set => typeString = value; }
-
-
-
         public AerialVehicle()
         {
             this.ID = Guid.NewGuid();
@@ -37,13 +17,13 @@ namespace PROG301_Week7.Models
             TypeString = this.GetType().Name;
         }
 
-        public virtual void StartEngine()
+        public new virtual void StartEngine()
         {
             if(Engine == null) { throw new Exception("Null Engine"); }
             Engine.Start();
         }
 
-        public virtual void StopEngine()
+        public new virtual void StopEngine()
         {
             if (Engine == null) { throw new Exception("Null Engine"); }
             Engine.Stop();
@@ -56,7 +36,7 @@ namespace PROG301_Week7.Models
             if(CurrentAltitude >= MaxAltitude) CurrentAltitude = MaxAltitude;
         }
 
-        public void FlyUp(int HowManyFeet)
+        public new void FlyUp(int HowManyFeet)
         {
             //If HowMany feet is nagtive trow invaid operation exception
             if (HowManyFeet < 0) throw new InvalidOperationException("Can't FlyUp a negative amount");
@@ -66,7 +46,7 @@ namespace PROG301_Week7.Models
             if(CurrentAltitude >= MaxAltitude) CurrentAltitude = MaxAltitude;
         }
 
-        public void FlyDown()
+        public new void FlyDown()
         {
             CurrentAltitude -= DefaultAltitudeChange;
 
@@ -77,7 +57,7 @@ namespace PROG301_Week7.Models
             }
         }
 
-        public void FlyDown(int HowManyFeet)
+        public new void FlyDown(int HowManyFeet)
         {
             if (HowManyFeet < 0) throw new InvalidOperationException("Can't FlyDown a negative amount");
             
@@ -118,7 +98,7 @@ namespace PROG301_Week7.Models
         /// Returns a string that describes if an engine is started
         /// </summary>
         /// <returns></returns>
-        public string getEngineStartedString()
+        public new string getEngineStartedString()
         {
             if (Engine == null) { throw new Exception("Null Engine"); }
             return this.Engine.About();

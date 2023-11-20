@@ -15,5 +15,10 @@ namespace PROG301_Week7
         public static ObservableCollection<O> IEnumToObsCol<O>(IEnumerable<O> collection) => new ObservableCollection<O>(collection);
 
         public static List<O> ObsColToList<O>(ObservableCollection<O> o_collection) => o_collection as List<O>;
+
+        public static void SetObsCol<O>(ObservableCollection<O> o1, ObservableCollection<O> o2)
+        {
+            o1.Clear();
+        }
     }
 }

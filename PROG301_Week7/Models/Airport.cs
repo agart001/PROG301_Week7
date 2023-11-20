@@ -112,7 +112,15 @@ namespace PROG301_Week7.Models
 
         public override int GetHashCode() => this.ID.GetHashCode();
 
-        public string GetFileName() => $"{AirportCode}_{ID}";
+        private string ShortHash()
+        {
+            int hash = this.GetHashCode();
+            char[] chash = hash.ToString().Replace('-','_').Take(5).ToArray();
+            string shash = new string(chash);
+            return shash;
+        }
+
+        public string GetFileName() => $"{AirportCode}_{ShortHash()}";
 
     }
 }

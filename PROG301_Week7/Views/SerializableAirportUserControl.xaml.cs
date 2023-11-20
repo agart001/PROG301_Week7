@@ -38,7 +38,16 @@ namespace PROG301_Week7.Views
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        public string[] SerializedFiles { get; set; }
+        private ObservableCollection<string>? serializedfiles;
+        public ObservableCollection<string> SerializedFiles
+        {
+            get { return serializedfiles ?? throw new ArgumentNullException(nameof(serializedfiles)); }
+            set
+            {
+                serializedfiles = value;
+                RaisePropertyChangedEvent("SerializedFiles");
+            }
+        }
 
         private string selfi = "";
         public string SelectedFile
@@ -56,27 +65,25 @@ namespace PROG301_Week7.Views
 
         public bool SelectedFileLocked = false;
 
-        public ObservableCollection<SerializableAirportViewModel> Airports {  get; set; }
+        private ObservableCollection<SerializableAirportViewModel>? airports;
+        public ObservableCollection<SerializableAirportViewModel> Airports 
+        {
+            get { return airports ?? throw new ArgumentNullException(nameof(airports)); } 
+            set
+            {
+                airports = value;
+                RaisePropertyChangedEvent("Airports");
+            }
+        }
 
-        private SerializableAirportViewModel selectedSAPVM;
+        private SerializableAirportViewModel? selectedSAPVM;
         public SerializableAirportViewModel SelectedSAPVM
         {
-            get { return selectedSAPVM; }
+            get { return selectedSAPVM ?? throw new ArgumentNullException(nameof(selectedSAPVM)); }
             set
             {
                 selectedSAPVM = value;
                 RaisePropertyChangedEvent("SelectedSAPVM");
-            }
-        }
-
-        private SerializableAirport selectedsapvm_ap;
-        public SerializableAirport SelectedSAPVM_AP
-        {
-            get { return selectedsapvm_ap; }
-            set
-            {
-                selectedsapvm_ap = value;
-                RaisePropertyChangedEvent("SelectedSAPVM_AP");
             }
         }
 
@@ -86,9 +93,9 @@ namespace PROG301_Week7.Views
         {
             List<IAirport> aps = new List<IAirport>
             {
-                new Airport("1a", 5),
+                new Airport("1a", 5, new List<AerialVehicle>{ new Airplane(), new Airplane() }),
                 new Airport("2a", 5),
-                new Airport("1b", 8),
+                new Airport("1b", 8, new List<AerialVehicle>{ new Airplane(), new Airplane() }),
                 new Airport("2b", 8)
             };
 
@@ -104,9 +111,16 @@ namespace PROG301_Week7.Views
 
         public SerializableAirportUserControl()
         {
-            SerializedFiles = Directory.GetFiles(System.IO.Path.Combine(Directory.GetCurrentDirectory(),"Serialized"));
+            SerializedFiles = IEnumToObsCol(
+                Directory.GetFiles(System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Serialized"))
+                );
 
             Airports = CreateAirports();
+
+            selectedSAPVM = Airports.FirstOrDefault();
+
+            DeserializeJSON = new BasicCommand(D_JSON, CanDeserializeJSON);
+            SerializeJSON = new BasicCommand(S_JSON, CanSerializeJSON);
 
             InitializeComponent();
         }
@@ -124,7 +138,7 @@ namespace PROG301_Week7.Views
         private void btn_SaveFile_Click(object sender, RoutedEventArgs e)
         {
             string filename = System.IO.Path.GetFileNameWithoutExtension(SelectedFile);
-            
+
             string extension = System.IO.Path.GetExtension(SelectedFile).Substring(1);
             UtilSerializer.SaveFile
                 (
@@ -153,8 +167,6 @@ namespace PROG301_Week7.Views
                     ?? throw new ArgumentNullException(nameof(sender));
                 SelectedSAPVM = lv.SelectedItem as SerializableAirportViewModel 
                     ?? throw new ArgumentNullException(nameof(lv));
-                SelectedSAPVM_AP = (SerializableAirport)SelectedSAPVM.airport 
-                    ?? throw new InvalidCastException(nameof(SelectedSAPVM.airport));
             }
         }
 
@@ -166,6 +178,72 @@ namespace PROG301_Week7.Views
             }
             else 
             { SelectedSAPVMLocked = false; }
+        }
+
+
+        public ICommand DeserializeJSON { get; set; }
+        private bool CanDeserializeJSON(object parameter) => true;
+
+        private void D_JSON(object parameter)
+        {
+            string path = SelectedFile;
+
+            string file = System.IO.Path.GetFileNameWithoutExtension(path);
+
+            SerializedFile sf = UtilSerializer.GetFile
+                (
+                    "Serialized",
+                    file,
+                    "json"
+                );
+
+            Airport ap =
+                UtilSerializer.JsonDeserialize<Airport>
+                (sf.Contents ?? throw new ArgumentNullException(nameof(sf)));
+
+            UtilSerializer.DeleteFile("Serialized", sf);
+
+            tb_SerializedFile.Text = "";
+
+            SerializedFiles.Remove(UtilSerializer.GetPath("Serialized", sf));
+
+            SelectedFile = SerializedFiles.FirstOrDefault();
+            SelectedFileLocked = false;
+
+            Airports.Add(new SerializableAirportViewModel(ap));
+        }
+
+
+        public ICommand SerializeJSON { get; set; }
+        private bool CanSerializeJSON(object parameter) => true;
+
+        private void S_JSON(object parameter)
+        {
+
+            SerializedFile sf = new SerializedFile
+                (
+                    SelectedSAPVM.airport.GetFileName(),
+                    "json",
+                    UtilSerializer.JsonSerialize(SelectedSAPVM.airport),
+                    typeof(SerializableAirport)
+                );
+
+            UtilSerializer.SaveFile
+                (
+                    "Serialized",
+                    sf.Name ?? "default",
+                    sf.Extension ?? "txt",
+                    sf.Contents ?? ""
+                );
+
+            SerializedFiles.Add(UtilSerializer.GetPath("Serialized", sf));
+
+            Airports.Remove(SelectedSAPVM);
+
+            SelectedSAPVM = airports.FirstOrDefault();
+            SelectedSAPVMLocked = false;
+
+            tb_SerializedFile.Text = "";
         }
     }
 }
